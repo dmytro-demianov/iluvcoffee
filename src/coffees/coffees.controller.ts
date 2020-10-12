@@ -1,29 +1,40 @@
 import {
     Body,
-    Controller, Delete,
+    Controller,
+    Delete,
     Get,
     HttpCode,
     HttpStatus,
-    Param, Patch,
-    Post, Query,
+    Inject,
+    Param,
+    Patch,
+    Post,
+    Query,
+    Request,
     Res,
 } from '@nestjs/common';
 import { CoffeesService } from "./coffees.service";
 import {CreateCoffeeDto} from "./dto/create-coffee.dto";
 import {UpdateCoffeeDto} from "./dto/update-coffee.dto";
+import {PaginationQueryDto} from "../common/dto/pagination-query.dto";
+import {REQUEST} from "@nestjs/core";
 
 @Controller('coffees')
 export class CoffeesController {
-    constructor(private readonly coffeeService: CoffeesService) {}
+    constructor(
+        private readonly coffeeService: CoffeesService,
+        @Inject(REQUEST) private readonly request: Request
+    ) {
+        console.log('CoffeesController created!');
+    }
 
     @Get()
     // findAll(@Res() response) {
-    findAll(@Query() paginationQuery) {
-        let { limit, offset } = paginationQuery;
+    findAll(@Query() paginationQuery: PaginationQueryDto) {
         // response.status(200).send('All coffees found');
         // return `Get all coffees with limit "${limit}" and offset "${offset}".`;
 
-        return this.coffeeService.findAll();
+        return this.coffeeService.findAll(paginationQuery);
     }
 
     @Get(':id')
@@ -42,13 +53,13 @@ export class CoffeesController {
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
-        this.coffeeService.update(id, updateCoffeeDto);
+        return this.coffeeService.update(id, updateCoffeeDto);
         // return `One coffee with ID #[${id}] was updated`;
     }
 
     @Delete(':id')
     delete(@Param('id') id: string) {
-        this.coffeeService.remove(id);
+        return this.coffeeService.remove(id);
         // return `One coffee with ID #[${id}] was deleted`;
     }
 }
