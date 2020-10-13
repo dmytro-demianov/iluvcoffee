@@ -48,7 +48,7 @@ export class CoffeesService {
         // const coffeesConfig = this.configService.get('coffees.foo');
         // console.info(coffeesConfig);
 
-        console.info(coffeesConfiguration.foo);
+        // console.info(coffeesConfiguration.foo);
     }
 
     findAll(paginationQuery: PaginationQueryDto) {

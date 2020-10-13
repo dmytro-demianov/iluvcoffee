@@ -12,12 +12,18 @@ import {
     Query,
     Request,
     Res,
+    SetMetadata,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { CoffeesService } from "./coffees.service";
 import {CreateCoffeeDto} from "./dto/create-coffee.dto";
 import {UpdateCoffeeDto} from "./dto/update-coffee.dto";
 import {PaginationQueryDto} from "../common/dto/pagination-query.dto";
 import {REQUEST} from "@nestjs/core";
+import {Public} from "../common/decorators/public.decorator";
+import {ParseIntPipe} from "../common/pipes/parse-int.pipe";
+import {Protocol} from "../common/decorators/protocol.decorator";
 
 @Controller('coffees')
 export class CoffeesController {
@@ -25,20 +31,33 @@ export class CoffeesController {
         private readonly coffeeService: CoffeesService,
         @Inject(REQUEST) private readonly request: Request
     ) {
-        console.log('CoffeesController created!');
+        // console.log('CoffeesController created!');
     }
 
     @Get()
+    // @SetMetadata('isPublic', true)
+    @Public()
     // findAll(@Res() response) {
-    findAll(@Query() paginationQuery: PaginationQueryDto) {
+    async findAll(
+        @Protocol('https') protocol: string,
+        @Query() paginationQuery: PaginationQueryDto
+    ) {
+        console.log('Protocol: ', protocol);
+
         // response.status(200).send('All coffees found');
         // return `Get all coffees with limit "${limit}" and offset "${offset}".`;
+
+        // await new Promise(resolve => setTimeout(resolve, 5000));
 
         return this.coffeeService.findAll(paginationQuery);
     }
 
+    // @UsePipes(ValidationPipe)
     @Get(':id')
-    findOne(@Param('id') id: number) {
+    // findOne(@Param('id') id: number) {
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        // console.log('ID:', id);
+
         return this.coffeeService.findOne('' + id);
         // return `One coffee found with ID #[${id}]`;
     }
@@ -52,6 +71,7 @@ export class CoffeesController {
     }
 
     @Patch(':id')
+    // update(@Param('id') id: string, @Body(ValidationPipe) updateCoffeeDto: UpdateCoffeeDto) {
     update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
         return this.coffeeService.update(id, updateCoffeeDto);
         // return `One coffee with ID #[${id}] was updated`;

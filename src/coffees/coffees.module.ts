@@ -2,6 +2,11 @@ import {
     Injectable,
     Module,
     Scope,
+    UsePipes,
+    // UseGuards,
+    // UseFilters,
+    // UseInterceptors,
+    ValidationPipe,
 } from '@nestjs/common';
 import { CoffeesController } from "./coffees.controller";
 import { CoffeesService } from "./coffees.service";
@@ -18,6 +23,8 @@ class ConfigService {}
 class DevelopmentConfigService {}
 class ProductionConfigService {}
 
+// @UsePipes(ValidationPipe) // это предпочтительней
+// @UsePipes(new ValidationPipe())
 @Injectable()
 class CoffeeBrandsFactory {
     create() {
