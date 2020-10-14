@@ -30,10 +30,10 @@ export class CoffeesService {
         @InjectRepository(Flavor)
         private readonly flavorRepository: Repository<Flavor>,
         private readonly connection: Connection,
-        @Inject(COFFEE_BRANDS) coffeeBrands: string[],
-        // private readonly configService: ConfigService,
-        @Inject(coffeesConfig.KEY)
-        private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
+        // @Inject(COFFEE_BRANDS) coffeeBrands: string[],
+        // // private readonly configService: ConfigService,
+        // @Inject(coffeesConfig.KEY)
+        // private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
     ) {
         // console.info(coffeeBrands);
         // console.info('CoffeesService initialized!');
